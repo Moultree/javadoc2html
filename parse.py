@@ -5,12 +5,23 @@ from pattern import Pattern
 
 
 class Parser:
+    """
+    This class is responsible for parsing the Java code.
+    """
+
     def __init__(self, code: str) -> None:
         self.code = self.format_java_code(code)
         with open("example.java", "w") as f:
             f.write(self.code)
 
     def format_java_code(self, java_code: str, indent: int = 4) -> str:
+        """
+        Format the Java code.
+
+        :param java_code: The Java code to format.
+        :param indent: The number of spaces to indent.
+        :return: The formatted Java code.
+        """
         lines = java_code.split("\n")
 
         lines = [line.strip().split("//")[0].strip() for line in lines]
@@ -31,6 +42,12 @@ class Parser:
         return formatted_code.strip()
 
     def replace_with_mnemonic(self, text: str) -> str:
+        """
+        Replace all symbols with mnemonics.
+
+        :param text: text to replace
+        :return: text with mnemonics
+        """
         symbol_mnemonics = {
             "<": "&lt;",
             ">": "&gt;",
@@ -45,9 +62,21 @@ class Parser:
         return text
 
     def _get_nesting_level(self, line: str) -> int:
+        """
+        Get the nesting level of a line.
+
+        :param line: The line to get the nesting level of. (Default: 4)
+        :return: The nesting level of the line.
+        """
         return (len(line) - len(line.lstrip())) // 4
 
-    def get_parameters(self, parameters: str):
+    def get_parameters(self, parameters: str) -> list[Parameter]:
+        """
+        Get the parameters of a method.
+
+        :param parameters: String containing parameters of the method.
+        :return: List of parameters of the method.
+        """
         params = re.findall(r"([\w\d]+(?:<.*?>)?(?:\[\])?)\s+([\w\d_$]+)", parameters)
         java_parameters = []
 
@@ -59,6 +88,12 @@ class Parser:
         return java_parameters
 
     def get_method(self, match: re.Match[str], nesting_level: int) -> Method | None:
+        """
+        Get the method of a class.
+        :param match: The match of the method.
+        :param nesting_level: The nesting level of the method.
+        :return: The method of the class.
+        """
         _modifiers, return_type, name, parameters, _ = match.groups()
 
         visibility = "default"
@@ -97,6 +132,12 @@ class Parser:
     def get_class(
         self, match: re.Match[str], nesting_level: int
     ) -> Class | Interface | Record | Enum:
+        """
+        Get the class/interface/record/enum.
+        :param match: The match of the class/interface/record/enum.
+        :param nesting_level: The nesting level of the class/interface/record/enum.
+        :return: The class/interface/record/enum.
+        """
         _modifiers, kind, name = match.groups()
 
         match kind:
@@ -125,6 +166,13 @@ class Parser:
         )
 
     def get_javadoc(self, javadoc: JavaDoc | None, line: str):
+        """
+        Get the javadoc of a method or class.
+        :param javadoc: The javadoc of the method or class.
+        :param line: Current line of the file.
+
+        :return: The javadoc of the method or class.
+        """
         line = (
             line.strip().removesuffix("*/").removeprefix("/*").removeprefix("*").strip()
         )
@@ -151,7 +199,12 @@ class Parser:
         if line:
             javadoc.text += line + "\n"
 
-    def parse(self):
+    def parse(self) -> list[Class | Interface | Record | Enum]:
+        """
+        Parse the Java code.
+
+        :return: List of classes/interfaces/records/enums.
+        """
         classes: list[Class] = []
         parent_tree: list[Class] = []
         parent: Class = None

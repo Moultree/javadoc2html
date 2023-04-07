@@ -15,7 +15,7 @@ class Pattern:
     # Matches: Generic type declaration (<T>)
     GENERIC = re.compile(r"^<\w+>")
 
-    # regex will watch all after extends/implements; need to split('implements')[0] ig
+    # regex will capture all after extends/implements; need to split('implements')[0]
     IMPLEMENTS = re.compile(r"implements ([\w<., >_$]+)")
 
     EXTENDS = re.compile(r"extends ([\w<., >_$]+)")

@@ -58,16 +58,19 @@ visibility_scopes = ["public", "protected", "private", "default"]
 
 
 class JavaObject(object):
+    """
+    Base class for all Java objects.
+    """
+
     pass
 
 
 @dataclass
-class Comment(JavaObject):
-    text: str = ""
-
-
-@dataclass
 class JavaDoc(JavaObject):
+    """
+    Represents a JavaDoc comment.
+    """
+
     text: str = ""
 
     author: list[str] = field(default_factory=list)
@@ -83,6 +86,10 @@ class JavaDoc(JavaObject):
 
 @dataclass
 class Object(JavaObject):
+    """
+    Represents a Java structure.
+    """
+
     nesting_level: int
     name: str
     visibility: str
@@ -99,6 +106,10 @@ class Object(JavaObject):
 
 @dataclass
 class Class(Object):
+    """
+    Represents a Java class.
+    """
+
     modifiers: list[Object] = field(default_factory=list)
     children: list[Object] = field(default_factory=list)
     javadoc: JavaDoc = None
@@ -127,6 +138,10 @@ class Class(Object):
 
 @dataclass
 class Method(Object):
+    """
+    Represents a Java method.
+    """
+
     return_type: str
     parameters: list[Parameter] = field(default_factory=list)
     modifiers: list[str] = field(default_factory=list)
@@ -152,6 +167,10 @@ class Method(Object):
 
 @dataclass
 class Field(Object):
+    """
+    Represents a Java field.
+    """
+
     java_type: str
     modifiers: list[str]
     javadoc: JavaDoc = None
@@ -159,6 +178,10 @@ class Field(Object):
 
 @dataclass
 class Parameter(JavaObject):
+    """
+    Represents a Java parameter.
+    """
+
     java_type: str
     name: str
     optional: bool = False
@@ -175,14 +198,26 @@ class Parameter(JavaObject):
 
 @dataclass
 class Interface(Class):
+    """
+    Represents a Java interface.
+    """
+
     pass
 
 
 @dataclass
 class Record(Class):
+    """
+    Represents a Java record.
+    """
+
     pass
 
 
 @dataclass
 class Enum(Class):
+    """
+    Represents a Java enum.
+    """
+
     pass
