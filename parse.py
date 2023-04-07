@@ -11,8 +11,6 @@ class Parser:
 
     def __init__(self, code: str) -> None:
         self.code = self.format_java_code(code)
-        with open("example.java", "w") as f:
-            f.write(self.code)
 
     def format_java_code(self, java_code: str, indent: int = 4) -> str:
         """
