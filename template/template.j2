@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JavaDoc Viewer</title>
+    <link rel="stylesheet" href="static/style.css" />
+    <link rel="icon" type="image/x-icon" href="static/Logo.svg" />
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="static/Logo.svg">
+            <span>JavaDoc Viewer</span>
+        </div>
+    </nav>
+
+    <main>
+        <nav class="sidebar">
+            <section class="folder">
+                <span>Files</span>
+            </section>
+            <section class="files">
+                {% for file in files %}
+                <a class="file {{ 'selected' if file == selected else ''}}"
+                    href="{{ file.removesuffix('.java') + '.html' }}">
+                    <img src="static/doc.svg" class="icon">
+                    <span>{{ file }}</span>
+                </a>
+                {% endfor %}
+            </section>
+        </nav>
+
+        <div class="wrapper">
+            <h2>{{ selected }}</h2>
+
+            {% for cls in classes %}
+            <div class="item">
+                <header>
+                    <span class="{{ cls.__class__.__name__.lower() }}">{{ cls.__class__.__name__.lower() }}</span>
+                    <span class="text">{{ cls.name }}</span>
+                </header>
+
+                {% if cls.extends %}
+                <header class="mini">
+                    <img src="static/icons/arrowdown.svg">
+                    <span class="class">class</span>
+                    <span class="text">{{ cls.extends }}</span>
+                </header>
+                {% endif %}
+
+                {% for impl in cls.implements %}
+                <header class="mini">
+                    <img src="static/icons/arrowdown.svg">
+                    <span class="interface">interface</span>
+                    <span class="text">{{ impl }}</span>
+                </header>
+                {% endfor %}
+
+                <div class="tags">
+                    <span class="tag"><img src="static/icons/{{ cls.visibility }}.svg">{{ cls.visibility }}</span>
+                    {% if cls.javadoc.deprecated %}
+                    <span class="tag warning" title="{{ cls.javadoc.deprecated }}"><img
+                            src="static/icons/warning.svg">Deprecated</span>
+                    <br />
+                    {% endif %}
+                    {% for modifier in cls.modifiers %}
+                    <span class="tag"><img src="static/icons/{{ modifier }}.svg">{{ modifier }}</span>
+                    {% endfor %}
+                </div>
+
+                <p> {{ cls.javadoc.text }} </p>
+
+                {% with cls=cls %}
+                {% include "children.j2" %}
+                {% endwith %}
+
+
+                {% if cls.javadoc.author %}
+                <span class="author"><img src="static/icons/author.svg"> {{ ', '.join(cls.javadoc.author) }}</span>
+                {% endif %}
+                {% if cls.javadoc.since %}
+                <span class="since"><img src="static/icons/clock.svg"> {{ cls.javadoc.since }}</span>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="empty">
+                <img src="static/whoops.png">
+                <h1>Whoops!</h1>
+                <p>This file is empty.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+
+</html>

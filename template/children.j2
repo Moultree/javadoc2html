@@ -1,0 +1,87 @@
+<div class="children">
+    {% for child in cls.children %}
+    <section class="child">
+        <div class="indent"></div>
+
+        <div class="item">
+            <header>
+                <span class="{{ child.__class__.__name__.lower() }}">{{ child.__class__.__name__.lower()
+                    }}</span>
+                {% if "method" == child.__class__.__name__.lower() %}
+                <span class="text">.{{ child.name }}({% for param in child.parameters %}
+                    <span class="parameter">{{ param.java_type }} {{ param.name }}</span>
+                    {% endfor %})
+                </span>
+                {% else %}
+                <span class="text">{{ child.name }}</span>
+                {% endif %}
+            </header>
+            <div class="tags">
+                <span class="tag"><img src="static/icons/{{ child.visibility }}.svg">{{ child.visibility }}</span>
+                {% if child.javadoc.deprecated %}
+                <span class="tag warning" title="{{ child.javadoc.deprecated }}"><img
+                        src="static/icons/warning.svg">Deprecated</span>
+                {% endif %}
+                {% for modifier in child.modifiers %}
+                <span class="tag"><img src="static/icons/{{ modifier }}.svg">{{ modifier }}</span>
+                {% endfor %}
+            </div>
+            {% if child.javadoc %}
+            <div class="about">
+                <p>{{ child.javadoc.text }}</p>
+                {% for link in child.javadoc.see %}
+                <span class="see"><img src="static/icons/link.svg"> {{ link }}</span>
+                {% endfor %}
+                {% if child.parameters %}
+                <div class="parameters">
+                    <h3>Parameters: </h3>
+                    {% for param in child.parameters %}
+                    <p>
+                        <span class="parameter">{{ param.java_type }} {{ param.name }}</span>
+                        {% if child.javadoc.param %}
+                        {{ child.javadoc.param[loop.index - 1].removeprefix(param.name + " ") }}
+                        {% endif %}
+                    </p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if child.throws %}
+                <div class="throws">
+                    <h3>Throws: </h3>
+                    {% for exception in child.throws %}
+                    <p>
+                        <span class="parameter">{{ exception }}</span>
+                        {% if child.javadoc.throws %}
+                        {{ child.javadoc.throws[loop.index - 1].removeprefix(exception + " ") }}
+                        {% endif %}
+                    </p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if "Method" in child.__class__.__name__ %}
+            <div class="returns">
+                <h3>Returns: <span class="parameter">{{ child.return_type }}</span></h3>
+                <p>
+                    {{ child.javadoc.return_
+                    or
+                    '' }}
+                </p>
+            </div>
+            {% endif %}
+            {% if child.javadoc.author %}
+            <span class="author"><img src="static/icons/author.svg"> {{ ', '.join(child.javadoc.author) }}</span>
+            {% endif %}
+            {% if child.javadoc.since %}
+            <span class="since"><img src="static/icons/clock.svg"> {{ child.javadoc.since }}</span>
+            {% endif %}
+            {% if child.children %}
+            {% with cls=child %}
+            {% include "children.j2" %}
+            {% endwith %}
+            {% endif %}
+        </div>
+    </section>
+    {% endfor %}
+</div>
