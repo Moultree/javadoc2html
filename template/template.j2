@@ -6,33 +6,87 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <title>JavaDoc Viewer</title>
     <link rel="stylesheet" href="static/style.css" />
     <link rel="icon" type="image/x-icon" href="static/Logo.svg" />
 </head>
 
 <body>
+    <script>
+        const pickLogo = (id) => {
+            $(".logo.selected").removeClass("selected");
+            $(`.logo#${id}`).addClass("selected");
+
+            $(".header img").attr("src", `static/logos/logo-${id}.png`);
+        };
+
+        const pickColor = (color) => {
+            $(".color.selected").removeClass("selected");
+            $(`.clr-${color}`).addClass("selected");
+            $("body").css("background", `var(--${color}-gradient)`);
+            $("body").css("background-size", "100vw 100vh");
+            $(".file.selected").css("background", `var(--${color}-color)`);
+        };
+    </script>
     <nav class="navbar">
-        <div class="logo">
-            <img src="static/Logo.svg">
+        <div class="header">
+            <img src="static/logos/logo-0.png">
             <span>JavaDoc Viewer</span>
         </div>
     </nav>
 
     <main>
         <nav class="sidebar">
-            <section class="folder">
-                <span>Files</span>
-            </section>
-            <section class="files">
-                {% for file in files %}
-                <a class="file {{ 'selected' if file == selected else ''}}"
-                    href="{{ file.removesuffix('.java') + '.html' }}">
-                    <img src="static/doc.svg" class="icon">
-                    <span>{{ file }}</span>
-                </a>
-                {% endfor %}
-            </section>
+            <nav class="explorer">
+                <section class="title">
+                    <span>Files</span>
+                </section>
+                <section class="files">
+                    {% for file in files %}
+                    <a class="file {{ 'selected' if file == selected else ''}}"
+                        href="{{ file.removesuffix('.java') + '.html' }}">
+                        <img src="static/doc.svg" class="icon">
+                        <span>{{ file }}</span>
+                    </a>
+                    {% endfor %}
+                </section>
+            </nav>
+            <nav class="settings">
+                <section class="title">
+                    <span>Colors</span>
+                </section>
+                <div class="colors">
+                    <span class="color clr-pink selected" onclick="pickColor('pink');">pink</span>
+                    <span class="color clr-green" onclick="pickColor('green');">green</span>
+                    <span class="color clr-yellow" onclick="pickColor('yellow');">yellow</span>
+                    <span class="color clr-blue" onclick="pickColor('blue');">blue</span>
+                    <span class="color clr-red" onclick="pickColor('red');">red</span>
+                </div>
+                <section class="title">
+                    <span>Logos</span>
+                </section>
+                <div class="logos">
+                    <div class="logo selected" onclick="pickLogo(0);" id="0">
+                        <img src="static/logos/logo-0.png">
+                    </div>
+                    <div class="logo" onclick="pickLogo(1);" id="1">
+                        <img src="static/logos/logo-1.png">
+                    </div>
+                    <div class="logo" onclick="pickLogo(2);" id="2">
+                        <img src="static/logos/logo-2.png">
+                    </div>
+                    <div class="logo" onclick="pickLogo(3);" id="3">
+                        <img src="static/logos/logo-3.png">
+                    </div>
+                    <div class="logo" onclick="pickLogo(4);" id="4">
+                        <img src="static/logos/logo-4.png">
+                    </div>
+                </div>
+            </nav>
         </nav>
 
         <div class="wrapper">
