@@ -75,7 +75,10 @@ class Parser:
         :param parameters: String containing parameters of the method.
         :return: List of parameters of the method.
         """
-        params = re.findall(r"([\w\d]+(?:<.*?>)?(?:\[\])?)\s+([\w\d_$]+)", parameters)
+        params = re.findall(
+            r"([\w\d]+(?:<.*?>)?(?:\[\])?)\s+([\w\d_$]+)",
+            parameters
+        )
         java_parameters = []
 
         for java_type, name in params:
@@ -85,14 +88,18 @@ class Parser:
 
         return java_parameters
 
-    def get_method(self, match: re.Match[str], nesting_level: int) -> Method | None:
+    def get_method(
+        self,
+        match: re.Match[str],
+        nesting_level: int
+    ) -> Method | None:
         """
         Get the method of a class.
         :param match: The match of the method.
         :param nesting_level: The nesting level of the method.
         :return: The method of the class.
         """
-        _modifiers, return_type, name, parameters, _ = match.groups()
+        _modifiers, return_type, name, parameters = match.groups()
 
         visibility = "default"
         generic = False
@@ -114,9 +121,6 @@ class Parser:
 
         parameters = self.get_parameters(parameters)
 
-        if return_type in visibility_scopes:
-            return_type = "void"
-
         return Method(
             nesting_level,
             name,
@@ -133,7 +137,7 @@ class Parser:
         """
         Get the class/interface/record/enum.
         :param match: The match of the class/interface/record/enum.
-        :param nesting_level: The nesting level of the class/interface/record/enum.
+        :param nesting_level: The nesting level of the class.
         :return: The class/interface/record/enum.
         """
         _modifiers, kind, name = match.groups()
@@ -160,7 +164,10 @@ class Parser:
                 found_modifiers.append(modifier)
 
         return kind(
-            nesting_level, self.replace_with_mnemonic(name), visibility, found_modifiers
+            nesting_level,
+            self.replace_with_mnemonic(name),
+            visibility,
+            found_modifiers
         )
 
     def get_javadoc(self, javadoc: JavaDoc | None, line: str):
@@ -172,7 +179,11 @@ class Parser:
         :return: The javadoc of the method or class.
         """
         line = (
-            line.strip().removesuffix("*/").removeprefix("/*").removeprefix("*").strip()
+            line.strip()
+                .removesuffix("*/")
+                .removeprefix("/*")
+                .removeprefix("*")
+                .strip()
         )
 
         tag_mappings = {
@@ -215,7 +226,10 @@ class Parser:
         for line in self.code.split("\n"):
             if entity:
                 if extends := Pattern.EXTENDS.search(line):
-                    entity.extends = extends.group(1).split("implements")[0]
+                    match = re.match(
+                        r"([\w\d.]+(?:<.*?>)?)", extends.group(1).split("implements")[0]
+                    )
+                    entity.extends = match.group(1) if match else None
 
                 if implements := Pattern.IMPLEMENTS.search(line):
                     entity.implements.extend(
@@ -233,7 +247,9 @@ class Parser:
                         )
                     )
 
-                if line.strip().removesuffix("}").endswith("{"):
+                if line.strip().removesuffix("}").endswith("{") or (
+                    line.strip().endswith(";") and isinstance(entity, Method)
+                ):
                     entity = None
                     continue
 
@@ -267,9 +283,11 @@ class Parser:
                 new = self.get_class(cls, nesting_level)
 
                 if extends := Pattern.EXTENDS.search(line):
-                    new.extends = self.replace_with_mnemonic(
+                    match = re.match(
+                        r"([\w\d.]+(?:<.*?>)?)",
                         extends.group(1).split("implements")[0]
                     )
+                    new.extends = match.group(1) if match else None
 
                 if implements := Pattern.IMPLEMENTS.search(line):
                     new.implements.extend(
@@ -289,7 +307,9 @@ class Parser:
                 if not line.strip().endswith("{"):
                     entity = new
 
-                if parent and parent.nesting_level == self._get_nesting_level(line):
+                if parent and (
+                    parent.nesting_level == self._get_nesting_level(line)
+                ):
                     if parent_tree:
                         parent_tree.pop()
                     parent = parent_tree[-1] if parent_tree else classes[-1]
@@ -321,16 +341,17 @@ class Parser:
                         )
                     )
 
-                if not line.strip().endswith("{"):
+                if (not line.strip().endswith("{")) or (
+                    line.strip().endswith(";")
+                ):
                     entity = new
 
-                if parent and parent.nesting_level == self._get_nesting_level(line):
+                if parent and (
+                    parent.nesting_level == self._get_nesting_level(line)
+                ):
                     if parent_tree:
                         parent_tree.pop()
                     parent = parent_tree[-1] if parent_tree else classes[-1]
-
-                if new.name == parent.name:
-                    new.name = "constructor"
 
                 if parent and parent.nesting_level < new.nesting_level:
                     parent.add_child(new)

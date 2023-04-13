@@ -33,7 +33,9 @@ class JavaClassToHtml:
         with open(path, "w") as out:
             out.write(
                 template.render(
-                    selected=self.selected, files=self.filenames, classes=self.classes
+                    selected=self.selected,
+                    files=self.filenames,
+                    classes=self.classes
                 )
             )
 

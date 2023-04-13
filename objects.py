@@ -129,6 +129,8 @@ class Class(Object):
             f"  nesting_level = {self.nesting_level}\n"
             f"  name = {self.name}\n"
             f"  visibility = {self.visibility}\n"
+            f"  extends = {self.extends}\n"
+            f"  implements = {self.implements}\n"
             f"  children = (\n"
             f"    {children_repr}"
             f"\n  )\n"
