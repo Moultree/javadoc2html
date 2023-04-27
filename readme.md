@@ -40,12 +40,12 @@ python -m javadoctohtml path/to/file.java
 
 During my work on this project, I was givan a handful of tasks to implement:  
 
-[x] Test coverage `80%`  
-[x] Specifying parent classes for derived classes  
-[x] Specifying function prototypes  
-[x] Inner links (`@link`, `@see`)  
-[x] Ability to change color scheme  
-[x] Ability to change logos    
+- [x] Test coverage `80%`  
+- [x] Specifying parent classes for derived classes  
+- [x] Specifying function prototypes  
+- [x] Inner links (`@link`, `@see`)  
+- [x] Ability to change color scheme  
+- [x] Ability to change logos    
 
 ## Testing
 
