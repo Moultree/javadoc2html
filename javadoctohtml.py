@@ -3,7 +3,6 @@ import os
 
 from jinja2 import Environment, FileSystemLoader
 
-from objects import *
 from parse import Parser
 
 
@@ -69,7 +68,7 @@ class JavaDocToHtml:
                     print(f"Found file: {os.path.join(dirpath, filename)}")
         return file_paths
 
-    def run(self, path: str):
+    def run(self, path: str) -> None:
         """
         Converts Java doc to HTML
         """
