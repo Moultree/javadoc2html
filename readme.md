@@ -36,6 +36,17 @@ python -m javadoctohtml path/to/file.java
 - Java parser: `parse.py`  
 - Java definitions as Python objects: `objects.py`  
 
+## Tasks
+
+During my work on this project, I was givan a handful of tasks to implement:  
+
+[x] Test coverage `80%`  
+[x] Specifying parent classes for derived classes  
+[x] Specifying function prototypes  
+[x] Inner links (`@link`, `@see`)  
+[x] Ability to change color scheme  
+[x] Ability to change logos    
+
 ## Testing
 
 At this moment, test coverage for this project is `97%`.  
