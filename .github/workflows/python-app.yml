@@ -39,4 +39,4 @@ jobs:
         flake8 . --count --exit-zero --max-line-length=79 --statistics
     - name: Test with unittest
       run: |
-        unittest
+        python -m unittest
