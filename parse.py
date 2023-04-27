@@ -1,6 +1,18 @@
 import re
 
-from objects import *
+from objects import (
+    Parameter,
+    Class,
+    Interface,
+    Enum,
+    Record,
+    Method,
+    JavaDoc,
+    Object,
+    banned_keywords,
+    visibility_scopes,
+    modifiers
+    )
 from pattern import Pattern
 
 
@@ -191,7 +203,8 @@ class Parser:
             "@return": ("return_", lambda line: " ".join(line.split()[1:])),
             "@throws": ("throws", lambda line: " ".join(line.split()[1:])),
             "@see": ("see", lambda line: " ".join(line.split()[1:])),
-            "@deprecated": ("deprecated", lambda line: " ".join(line.split()[1:])),
+            "@deprecated":
+                ("deprecated", lambda line: " ".join(line.split()[1:])),
             "@author": ("author", lambda line: " ".join(line.split()[1:])),
             "@since": ("since", lambda line: " ".join(line.split()[1:])),
             "@version": ("version", lambda line: " ".join(line.split()[1:])),
@@ -227,7 +240,8 @@ class Parser:
             if entity:
                 if extends := Pattern.EXTENDS.search(line):
                     match = re.match(
-                        r"([\w\d.]+(?:<.*?>)?)", extends.group(1).split("implements")[0]
+                        r"([\w\d.]+(?:<.*?>)?)",
+                        extends.group(1).split("implements")[0]
                     )
                     entity.extends = match.group(1) if match else None
 
