@@ -1,5 +1,7 @@
 # JavaDoc2HTML
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3f9a6627b48841e9ae2fcc4d4743ec33)](https://app.codacy.com/gh/Moultree/javadoc2html/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)  
+
 Author: Nikolay Tikhonchik (`okaykudes@gmail.com`)
 
 ## About  
