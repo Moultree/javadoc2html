@@ -32,3 +32,7 @@ class TestJavaDocToHtml(unittest.TestCase):
         after = os.listdir("out")
 
         self.assertEqual(len(before), len(after))
+
+
+if __name__ == "__main__":
+    unittest.main()
