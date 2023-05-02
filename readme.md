@@ -40,7 +40,7 @@ python -m javadoctohtml path/to/file.java
 
 ## Tasks
 
-During my work on this project, I was givan a handful of tasks to implement:  
+During my work on this project, I was given a handful of tasks to implement:  
 
 - [x] Test coverage `80%`  
 - [x] Specifying parent classes for derived classes  
