@@ -5,7 +5,7 @@
 Author: Nikolay Tikhonchik (`okaykudes@gmail.com`)
 
 ## About  
-This is a simple Python utility that parses JavaDoc from given Java files and geenerates HTML view from it.  
+This is a simple Python utility that parses JavaDoc from given Java files and generates HTML view from it.  
 It can be used as intended or as a reference solution.
 
 ## Features
